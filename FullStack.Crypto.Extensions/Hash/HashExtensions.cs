@@ -7,7 +7,6 @@ namespace FullStack.Extensions.Crypto.Hash
     using System;
     using System.IO;
     using System.Security.Cryptography;
-    using FullStack.Extensions.Crypto.Assert;
     using FullStack.Extensions.Text.Codec;
 
     /// <summary>
@@ -40,6 +39,25 @@ namespace FullStack.Extensions.Crypto.Hash
 
             var hasher = algo.ToAlgorithm();
             return hasher.ComputeHash(input);
+        }
+
+        /// <summary>
+        /// Hashes a file over evenly distributed file chunks.
+        /// </summary>
+        /// <remarks>Highly insecure, cryptographically.</remarks>
+        /// <param name="fi">The file.</param>
+        /// <param name="algo">The hash algorithm.</param>
+        /// <param name="reads">The number of distributed reads.</param>
+        /// <param name="chunkSize">The chunk size.</param>
+        /// <returns>A byte array.</returns>
+        public static byte[] LightHash(
+            this FileInfo fi,
+            HashAlgo algo,
+            int reads = 20,
+            int chunkSize = 4096)
+        {
+            using var str = fi.OpenRead();
+            return str.LightHash(algo, reads, chunkSize);
         }
 
         /// <summary>
@@ -81,7 +99,7 @@ namespace FullStack.Extensions.Crypto.Hash
             }
 
             stream.Seek(0, SeekOrigin.Begin);
-            hasher.TransformFinalBlock(new byte[0], 0, 0);
+            hasher.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
             return hasher.Hash;
         }
 

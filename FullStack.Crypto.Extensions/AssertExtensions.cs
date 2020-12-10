@@ -2,7 +2,7 @@
 // Copyright (c) ne1410s. All rights reserved.
 // </copyright>
 
-namespace FullStack.Extensions.Crypto.Assert
+namespace FullStack.Extensions.Crypto
 {
     using System;
     using System.IO;

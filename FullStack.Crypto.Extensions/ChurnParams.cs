@@ -2,7 +2,7 @@
 // Copyright (c) ne1410s. All rights reserved.
 // </copyright>
 
-namespace FullStack.Extensions.Crypto.Core
+namespace FullStack.Extensions.Crypto
 {
     using System;
 
