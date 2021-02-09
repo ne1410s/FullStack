@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FullStack.Api.Extensions", "FullStack.Api.Extensions\FullStack.Api.Extensions.csproj", "{E9E15E89-473D-44A2-A888-4345EEE72F78}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FullStack.Crypto.Extensions", "FullStack.Crypto.Extensions\FullStack.Crypto.Extensions.csproj", "{494C0617-5842-49DC-A12D-B44E81F2DBAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FullStack.Crypto", "FullStack.Crypto\FullStack.Crypto.csproj", "{494C0617-5842-49DC-A12D-B44E81F2DBAE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FullStack.Db.Abstractions", "FullStack.Db.Abstractions\FullStack.Db.Abstractions.csproj", "{ED743FAD-6170-41D8-9435-A3FDB5881B4B}"
 EndProject
@@ -38,6 +38,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FullStack.Validity", "FullStack.Validity\FullStack.Validity.csproj", "{E83F1EDC-A017-449E-9F0E-59CB031D4945}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FullStack.Validity.Tests", "FullStack.Validity.Tests\FullStack.Validity.Tests.csproj", "{5892902B-9224-4F89-8344-471024A55F92}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FullStack.Crypto.Tests", "FullStack.Crypto.Tests\FullStack.Crypto.Tests.csproj", "{9F79E882-F9F2-435A-B0DE-974891E2AB1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +95,10 @@ Global
 		{5892902B-9224-4F89-8344-471024A55F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5892902B-9224-4F89-8344-471024A55F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5892902B-9224-4F89-8344-471024A55F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F79E882-F9F2-435A-B0DE-974891E2AB1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F79E882-F9F2-435A-B0DE-974891E2AB1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F79E882-F9F2-435A-B0DE-974891E2AB1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F79E882-F9F2-435A-B0DE-974891E2AB1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

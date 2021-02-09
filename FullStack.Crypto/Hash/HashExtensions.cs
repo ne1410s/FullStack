@@ -2,7 +2,7 @@
 // Copyright (c) ne1410s. All rights reserved.
 // </copyright>
 
-namespace FullStack.Extensions.Crypto.Hash
+namespace FullStack.Crypto.Hash
 {
     using System;
     using System.IO;

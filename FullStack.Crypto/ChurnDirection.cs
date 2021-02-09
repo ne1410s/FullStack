@@ -1,13 +1,13 @@
-﻿// <copyright file="CryptoMode.cs" company="ne1410s">
+﻿// <copyright file="ChurnDirection.cs" company="ne1410s">
 // Copyright (c) ne1410s. All rights reserved.
 // </copyright>
 
-namespace FullStack.Extensions.Crypto
+namespace FullStack.Crypto
 {
     /// <summary>
-    /// Cryptographic mode.
+    /// Cryptographic direction.
     /// </summary>
-    public enum CryptoMode
+    public enum ChurnDirection
     {
         /// <summary>
         /// Decryption.

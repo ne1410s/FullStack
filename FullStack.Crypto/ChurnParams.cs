@@ -2,7 +2,7 @@
 // Copyright (c) ne1410s. All rights reserved.
 // </copyright>
 
-namespace FullStack.Extensions.Crypto
+namespace FullStack.Crypto
 {
     using System;
 
@@ -48,5 +48,15 @@ namespace FullStack.Extensions.Crypto
         /// Non default option of overwriting any existing target.
         /// </summary>
         RedoTarget = 1 << 2,
+
+        /// <summary>
+        /// Non default option of including a ".gmac" analogue of the subject.
+        /// </summary>
+        SubjectAuthentication = 1 << 3,
+
+        /// <summary>
+        /// Non default option of using CCM (instead of GCM).
+        /// </summary>
+        IsCcm = 1 << 4,
     }
 }
