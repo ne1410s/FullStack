@@ -10,15 +10,15 @@ namespace FullStack.Crypto.Tests
         [Fact]
         public void Encrypt_Ok()
         {
-            var fi = new FileInfo(@"C:\temp\1.flv");
+            var fi = new FileInfo(@"C:\temp\1.txt");
             fi.Encrypt(TestKey);
         }
 
         [Fact]
         public void Decrypt_Ok()
         {
-            var fi = new FileInfo(@"C:\temp\66dfea4105cf5744e7955d9bd41e2f377c3510da605905f0076e31e18c3858a2.flv");
-            using var fs = File.OpenWrite(@"c:\temp\1.flv");
+            var fi = new FileInfo(@"C:\temp\437651da0e539de3c510a2c52864e53867bbc4fec0b5452acc2adb51ec85ddda.txt");
+            using var fs = File.OpenWrite(@"c:\temp\1.txt");
             fi.Decrypt(TestKey, fs);
         }
     }
