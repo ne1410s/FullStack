@@ -16,7 +16,7 @@ dotnet-ef migrations remove -p MyDbProject -s MyApp
 #$env:DOTNET_ENVIRONMENT='Local'; dotnet-ef database update -p MyDbProject -s MyApp
 
 # apply specific migration
-#$env:DOTNET_ENVIRONMENT='Local'; dotnet-ef database update -p MyDbProject -s MyApp
+#$env:DOTNET_ENVIRONMENT='Local'; dotnet-ef database update <MigrationName> -p MyDbProject -s MyApp
 ```
 ___
 ###### Seeding

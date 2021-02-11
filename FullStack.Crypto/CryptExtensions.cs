@@ -16,7 +16,7 @@ namespace FullStack.Crypto
         private const int TagLength = 16;
         private static readonly byte[] CtrPad = { 0, 0, 0, 0 };
 
-        public static void Encrypt(this FileInfo fi, byte[] key, int bufferLength = 32768)
+        public static void Encrypt(this FileInfo fi, byte[] key, int bufferLength = 32768, Stream mac = null)
         {
             string name;
             var counter = new byte[12];
@@ -26,7 +26,6 @@ namespace FullStack.Crypto
 
             using (var source = fi.Open(FileMode.Open))
             {
-                var sizeBytes = BitConverter.GetBytes(fi.Length);
                 var salt = source.Hash(HashAlgo.Sha256);
                 source.Position = 0;
                 Array.Reverse(salt, 0, 8);
@@ -36,8 +35,7 @@ namespace FullStack.Crypto
 
                 int readSize;
                 using var aes = key.GenerateAes(salt);
-                using var mem = new MemoryStream();
-                while ((readSize = source.Read(srcBuffer, 0, bufferLength)) != 0)
+                while ((readSize = source.Read(srcBuffer, 0, srcBuffer.Length)) != 0)
                 {
                     ByteExtensions.Increment(ref counter);
                     var lastRead = readSize < bufferLength;
@@ -48,27 +46,23 @@ namespace FullStack.Crypto
                     }
 
                     aes.Encrypt(counter, srcBuffer, trgBuffer, macBuffer);
+                    mac?.Write(macBuffer, 0, macBuffer.Length);
                     source.Position -= readSize;
                     source.Write(trgBuffer, 0, trgBuffer.Length);
-                    mem.Write(macBuffer);
-
-                    if (lastRead) break;
                 }
-
-                source.Write(mem.ToArray());
             }
 
-            var target = Path.Combine(fi.DirectoryName, $"{name}{fi.Extension}");
-            fi.MoveTo(target.ToLower());
+            var target = Path.Combine(fi.DirectoryName, $"{name}{fi.Extension}").ToLower();
+            fi.MoveTo(target, true);
         }
 
         public static void Decrypt(
             this FileInfo fi,
             byte[] key,
             Stream target,
-            int bufferLength = 32768)
+            int bufferLength = 32768,
+            Stream mac = null)
         {
-            var originalSize = fi.GetOriginalSize(bufferLength);
             var macBuffer = new byte[TagLength];
             var srcBuffer = new byte[bufferLength];
             var trgBuffer = new byte[bufferLength];
@@ -77,19 +71,14 @@ namespace FullStack.Crypto
             target.SetLength(0);
             using var source = fi.OpenRead();
             using var aes = key.GenerateAes(salt);
-            var totalBlocks = (long)Math.Ceiling(originalSize / (double)bufferLength);
+            var totalBlocks = (long)Math.Ceiling(fi.Length / (double)bufferLength);
+
             for (var b = 0; b < totalBlocks; b++)
             {
-                var read = aes.DecryptBlock(source, originalSize, srcBuffer, macBuffer, trgBuffer);
+                mac?.Read(macBuffer, 0, macBuffer.Length);
+                var read = aes.DecryptBlock(source, mac != null, srcBuffer, macBuffer, ref trgBuffer);
                 target.Write(trgBuffer, 0, read);
             }
-        }
-
-        public static long GetOriginalSize(this FileInfo fi, int bufferLength)
-        {
-            var denominator = (double)fi.Length / (bufferLength + TagLength);
-            var macSize = (int)Math.Ceiling(denominator) * TagLength;
-            return fi.Length - macSize;
         }
 
         public static AesGcm GenerateAes(this byte[] key, byte[] salt)
@@ -101,33 +90,34 @@ namespace FullStack.Crypto
         public static int DecryptBlock(
             this AesGcm aes,
             Stream source,
-            long originalSize,
+            bool authenticate,
             byte[] srcBuffer,
             byte[] macBuffer,
-            byte[] trgBuffer)
+            ref byte[] trgBuffer)
         {
             var readSize = source.Read(srcBuffer, 0, srcBuffer.Length);
-
             var position = source.Position;
-            var blockNumber = (long)Math.Ceiling((double)position / srcBuffer.Length);
-            var finalBlock = position > originalSize;
-            if (finalBlock)
+            if (readSize < srcBuffer.Length)
             {
-                readSize = (int)(originalSize % srcBuffer.Length);
                 Array.Resize(ref srcBuffer, readSize);
                 Array.Resize(ref trgBuffer, readSize);
             }
 
+            var blockNumber = (long)Math.Ceiling((double)position / srcBuffer.Length);
             var countBytes = BitConverter.GetBytes(blockNumber);
             var counter = BitConverter.IsLittleEndian
                 ? countBytes.Concat(CtrPad).ToArray()
                 : CtrPad.Concat(countBytes).ToArray();
 
-            source.Position = originalSize + (TagLength * (blockNumber - 1));
-            source.Read(macBuffer, 0, TagLength);
-            source.Position = position;
+            if (authenticate)
+            {
+                aes.Decrypt(counter, srcBuffer, macBuffer, trgBuffer);
+            }
+            else
+            {
+                aes.Encrypt(counter, srcBuffer, trgBuffer, macBuffer);
+            }
 
-            aes.Decrypt(counter, srcBuffer, macBuffer, trgBuffer);
             return readSize;
         }
     }
