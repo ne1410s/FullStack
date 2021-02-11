@@ -68,6 +68,29 @@ namespace FullStack.Crypto.Tests
             File.Delete(macFile);
         }
 
+        [Fact]
+        public void Encrypt_Repeat_UniqueCipherSameName()
+        {
+            var fileName = "test.txt";
+            File.WriteAllText(fileName, "some text");
+            var file = new FileInfo(fileName);
+            file.Encrypt(TestKey);
+            var fileName1 = file.FullName;
+            var result1 = File.ReadAllText(fileName1);
+            File.WriteAllText(fileName1, "some text");
+            file.Encrypt(TestKey);
+            var fileName2 = file.FullName;
+            var result2 = File.ReadAllText(fileName2);
+
+            Assert.Equal(fileName1, fileName2);
+            Assert.NotEqual(result1, result2);
+
+            file.Delete();
+            File.Delete(fileName);
+            File.Delete(fileName1);
+            File.Delete(fileName2);
+        }
+
         [Theory]
         [InlineData(true, false)]
         [InlineData(false, true)]
@@ -86,6 +109,8 @@ namespace FullStack.Crypto.Tests
 
             var plainAgain = File.ReadAllText(fileName);
             Assert.Equal(expectMatch, plainText == plainAgain);
+            file.Delete();
+            File.Delete(fileName);
         }
 
         [Fact]
@@ -111,6 +136,10 @@ namespace FullStack.Crypto.Tests
                     file.Decrypt(TestKey, decStr, mac: mac);
                 });
             }
+
+            file.Delete();
+            File.Delete(fileName);
+            File.Delete(macFile);
         }
     }
 }
