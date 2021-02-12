@@ -75,11 +75,7 @@ namespace FullStack.Crypto
 
             target.SetLength(0);
             using var source = fi.OpenRead();
-            var pepper = new byte[PepperLength];
-            source.Seek(-PepperLength, SeekOrigin.End);
-            source.Read(pepper, 0, pepper.Length);
-            source.Seek(0, SeekOrigin.Begin);
-
+            var pepper = source.GeneratePepper();
             using var aes = key.GenerateAes(salt, pepper);
             var totalBlocks = (long)Math.Ceiling((fi.Length - PepperLength) / (double)bufferLength);
 
@@ -100,6 +96,15 @@ namespace FullStack.Crypto
         public static byte[] GenerateSalt(this FileInfo fi)
         {
             return fi.Name.Substring(0, 64).AsBytes(ByteCodec.Hex);
+        }
+
+        public static byte[] GeneratePepper(this Stream source)
+        {
+            var pepper = new byte[PepperLength];
+            source.Seek(-PepperLength, SeekOrigin.End);
+            source.Read(pepper, 0, pepper.Length);
+            source.Seek(0, SeekOrigin.Begin);
+            return pepper;
         }
 
         public static int DecryptBlock(
