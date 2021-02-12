@@ -101,8 +101,8 @@ namespace FullStack.Crypto
             for (var b = 0; b < totalBlocks; b++)
             {
                 mac?.Read(macBuffer, 0, macBuffer.Length);
-                trgBuffer = aes.DecryptBlock(source, mac != null, srcBuffer, macBuffer, trgBuffer);
-                target.Write(trgBuffer, 0, trgBuffer.Length);
+                var read = aes.DecryptBlock(source, mac != null, srcBuffer, macBuffer, trgBuffer);
+                target.Write(trgBuffer, 0, read);
             }
         }
 
@@ -163,7 +163,7 @@ namespace FullStack.Crypto
         /// be pre-filled with appropriate bytes.</param>
         /// <param name="trgBuffer">The plaintext block.</param>
         /// <returns>The bytes read.</returns>
-        public static byte[] DecryptBlock(
+        public static int DecryptBlock(
             this AesGcm aes,
             Stream source,
             bool authenticate,
@@ -175,11 +175,6 @@ namespace FullStack.Crypto
             var position = source.Position;
             var maxReadSize = Math.Min(length - position, srcBuffer.Length);
             var readSize = source.Read(srcBuffer, 0, (int)maxReadSize);
-            if (readSize < srcBuffer.Length)
-            {
-                Array.Resize(ref srcBuffer, readSize);
-                Array.Resize(ref trgBuffer, readSize);
-            }
 
             var blockNumber = 1 + (long)Math.Floor((double)position / srcBuffer.Length);
             var countBytes = BitConverter.GetBytes(blockNumber);
@@ -189,14 +184,14 @@ namespace FullStack.Crypto
 
             if (authenticate)
             {
-                aes.Decrypt(counter, srcBuffer, macBuffer, trgBuffer);
+                aes.Decrypt(counter, srcBuffer.AsSpan(0, readSize), macBuffer, trgBuffer.AsSpan(0, readSize));
             }
             else
             {
                 aes.Encrypt(counter, srcBuffer, trgBuffer, macBuffer);
             }
 
-            return trgBuffer;
+            return readSize;
         }
     }
 }
