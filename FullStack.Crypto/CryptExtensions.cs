@@ -11,12 +11,22 @@ namespace FullStack.Crypto
     using FullStack.Crypto.Hash;
     using FullStack.Extensions.Text.Codec;
 
+    /// <summary>
+    /// Extensions for cryptography.
+    /// </summary>
     public static class CryptExtensions
     {
         private const int TagLength = 16;
         private const int PepperLength = 32;
         private static readonly byte[] CtrPad = { 0, 0, 0, 0 };
 
+        /// <summary>
+        /// Encrypts a file in-situ, optionally writing a MAC if stream passed.
+        /// </summary>
+        /// <param name="fi">The file.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="bufferLength">Buffer length.</param>
+        /// <param name="mac">Optional write stream to capture MAC.</param>
         public static void Encrypt(this FileInfo fi, byte[] key, int bufferLength = 32768, Stream mac = null)
         {
             string name;
@@ -61,6 +71,15 @@ namespace FullStack.Crypto
             fi.MoveTo(target, true);
         }
 
+        /// <summary>
+        /// Decrypts a file to stream.
+        /// </summary>
+        /// <param name="fi">The file.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="target">The target stream.</param>
+        /// <param name="bufferLength">The buffer length.</param>
+        /// <param name="mac">Optional MAC stream. Enables the caller to check
+        /// the authenticity of the message if they so wish.</param>
         public static void Decrypt(
             this FileInfo fi,
             byte[] key,
@@ -68,7 +87,7 @@ namespace FullStack.Crypto
             int bufferLength = 32768,
             Stream mac = null)
         {
-            var macBuffer = new byte[TagLength];
+            var macBuffer = GenerateMacBuffer();
             var srcBuffer = new byte[bufferLength];
             var trgBuffer = new byte[bufferLength];
             var salt = fi.GenerateSalt();
@@ -87,17 +106,34 @@ namespace FullStack.Crypto
             }
         }
 
+        /// <summary>
+        /// Generates a MAC-capable AES-GCM cipher.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="salt">The salt.</param>
+        /// <param name="pepper">The pepper.</param>
+        /// <returns>The cipher.</returns>
         public static AesGcm GenerateAes(this byte[] key, byte[] salt, byte[] pepper)
         {
             var keyBytesRaw = pepper.Concat(key).Concat(salt.Reverse()).ToArray();
             return new AesGcm(keyBytesRaw.Hash(HashAlgo.Sha256));
         }
 
+        /// <summary>
+        /// Generates a salt from a file.
+        /// </summary>
+        /// <param name="fi">The file.</param>
+        /// <returns>A salt.</returns>
         public static byte[] GenerateSalt(this FileInfo fi)
         {
             return fi.Name.Substring(0, 64).AsBytes(ByteCodec.Hex);
         }
 
+        /// <summary>
+        /// Generates a pepper from a stream.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <returns>A pepper.</returns>
         public static byte[] GeneratePepper(this Stream source)
         {
             var pepper = new byte[PepperLength];
@@ -107,6 +143,26 @@ namespace FullStack.Crypto
             return pepper;
         }
 
+        /// <summary>
+        /// Generates a buffer of suitable length for use in MAC processes.
+        /// </summary>
+        /// <returns>The mac buffer.</returns>
+        public static byte[] GenerateMacBuffer()
+        {
+            return new byte[TagLength];
+        }
+
+        /// <summary>
+        /// Decrypts a block after reading it from the stream current position.
+        /// </summary>
+        /// <param name="aes">The aes cipher.</param>
+        /// <param name="source">The source stream.</param>
+        /// <param name="authenticate">Whether to authenticate.</param>
+        /// <param name="srcBuffer">The ciphertext block.</param>
+        /// <param name="macBuffer">The mac buffer. If authenticating, this must
+        /// be pre-filled with appropriate bytes.</param>
+        /// <param name="trgBuffer">The plaintext block.</param>
+        /// <returns>The number of bytes read.</returns>
         public static int DecryptBlock(
             this AesGcm aes,
             Stream source,
