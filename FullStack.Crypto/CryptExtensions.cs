@@ -71,7 +71,7 @@ namespace FullStack.Crypto
             var macBuffer = new byte[TagLength];
             var srcBuffer = new byte[bufferLength];
             var trgBuffer = new byte[bufferLength];
-            var salt = fi.Name.Substring(0, 64).AsBytes(ByteCodec.Hex);
+            var salt = fi.GenerateSalt();
 
             target.SetLength(0);
             using var source = fi.OpenRead();
@@ -95,6 +95,11 @@ namespace FullStack.Crypto
         {
             var keyBytesRaw = pepper.Concat(key).Concat(salt.Reverse()).ToArray();
             return new AesGcm(keyBytesRaw.Hash(HashAlgo.Sha256));
+        }
+
+        public static byte[] GenerateSalt(this FileInfo fi)
+        {
+            return fi.Name.Substring(0, 64).AsBytes(ByteCodec.Hex);
         }
 
         public static int DecryptBlock(
