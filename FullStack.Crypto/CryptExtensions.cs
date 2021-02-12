@@ -101,8 +101,8 @@ namespace FullStack.Crypto
             for (var b = 0; b < totalBlocks; b++)
             {
                 mac?.Read(macBuffer, 0, macBuffer.Length);
-                var read = aes.DecryptBlock(source, mac != null, srcBuffer, macBuffer, ref trgBuffer);
-                target.Write(trgBuffer, 0, read);
+                trgBuffer = aes.DecryptBlock(source, mac != null, srcBuffer, macBuffer, trgBuffer);
+                target.Write(trgBuffer, 0, trgBuffer.Length);
             }
         }
 
@@ -162,14 +162,14 @@ namespace FullStack.Crypto
         /// <param name="macBuffer">The mac buffer. If authenticating, this must
         /// be pre-filled with appropriate bytes.</param>
         /// <param name="trgBuffer">The plaintext block.</param>
-        /// <returns>The number of bytes read.</returns>
-        public static int DecryptBlock(
+        /// <returns>The bytes read.</returns>
+        public static byte[] DecryptBlock(
             this AesGcm aes,
             Stream source,
             bool authenticate,
             byte[] srcBuffer,
             byte[] macBuffer,
-            ref byte[] trgBuffer)
+            byte[] trgBuffer)
         {
             var length = source.Length - PepperLength;
             var position = source.Position;
@@ -196,7 +196,7 @@ namespace FullStack.Crypto
                 aes.Encrypt(counter, srcBuffer, trgBuffer, macBuffer);
             }
 
-            return readSize;
+            return trgBuffer;
         }
     }
 }
