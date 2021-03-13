@@ -27,9 +27,9 @@ namespace FullStack.Db.Extensions.Provider
 
         /// <summary>
         /// The package namespace for
-        /// <see cref="MySQL.Data.EntityFrameworkCore"/>.
+        /// <see cref="Pomelo.EntityFrameworkCore.MySql"/>.
         /// </summary>
-        public const string EFCORE_MYSQL = nameof(MySQL.Data.EntityFrameworkCore);
+        public const string EFCORE_MYSQL = nameof(Pomelo.EntityFrameworkCore.MySql);
 
         /// <summary>
         /// Gets a supported provider type from package namespace.
@@ -61,7 +61,7 @@ namespace FullStack.Db.Extensions.Provider
             var builder = new DbContextOptionsBuilder();
             return dbType switch
             {
-                DatabaseType.MySql => builder.UseMySQL(connectionString).Options,
+                DatabaseType.MySql => builder.UseMySql(connectionString).Options,
                 DatabaseType.Sqlite => builder.UseSqlite(connectionString).Options,
                 DatabaseType.SqlServer => builder.UseSqlServer(connectionString).Options,
                 _ => throw new NotSupportedException($"Unsupported database type: {dbType}"),

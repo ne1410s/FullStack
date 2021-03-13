@@ -26,11 +26,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FullStack.Text.Extensions" Version="1.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FullStack.Text.Extensions\FullStack.Text.Extensions.csproj" />
   </ItemGroup>
 
 </Project>
