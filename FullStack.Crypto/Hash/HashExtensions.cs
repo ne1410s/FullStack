@@ -28,7 +28,8 @@ namespace FullStack.Crypto.Hash
 
         /// <summary>
         /// Obtains a signature of the input stream. The caller is responsible
-        /// for its disposal.
+        /// for its disposal. Note that after the operation, the stream position
+        /// will be at the end.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="algo">The hash algorithm.</param>
@@ -36,9 +37,21 @@ namespace FullStack.Crypto.Hash
         public static byte[] Hash(this Stream input, HashAlgo algo)
         {
             input.AssertReadable();
-
+            input.Position = 0;
             var hasher = algo.ToAlgorithm();
             return hasher.ComputeHash(input);
+        }
+
+        /// <summary>
+        /// Obtains a signature of the input file.
+        /// </summary>
+        /// <param name="fi">The input.</param>
+        /// <param name="algo">The hash algorithm.</param>
+        /// <returns>A byte array.</returns>
+        public static byte[] Hash(this FileInfo fi, HashAlgo algo)
+        {
+            using var stream = File.Open(fi.FullName, FileMode.Open, FileAccess.Read);
+            return stream.Hash(algo);
         }
 
         /// <summary>
