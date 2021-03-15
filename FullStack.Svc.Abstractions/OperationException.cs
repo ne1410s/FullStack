@@ -28,6 +28,32 @@ namespace FullStack.Svc.Abstractions
         }
 
         /// <summary>
+        /// Initialises a new instance of the <see cref="OperationException"/>
+        /// class.
+        /// </summary>
+        public OperationException()
+        { }
+
+        /// <summary>
+        /// Initialises a new instance of the <see cref="OperationException"/>
+        /// class.
+        /// </summary>
+        /// <param name="message">A message.</param>
+        public OperationException(string message)
+            : base(message)
+        { }
+
+        /// <summary>
+        /// Initialises a new instance of the <see cref="OperationException"/>
+        /// class.
+        /// </summary>
+        /// <param name="message">A message.</param>
+        /// <param name="innerException">Inner exception.</param>
+        public OperationException(string message, Exception innerException)
+            : base(message, innerException)
+        { }
+
+        /// <summary>
         /// Gets the operation data yielded thus far.
         /// </summary>
         public OperationData OperationData { get; }

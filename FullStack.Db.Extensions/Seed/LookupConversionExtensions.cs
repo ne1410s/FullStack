@@ -6,6 +6,7 @@ namespace FullStack.Db.Extensions.Seed
 {
     using System;
     using System.ComponentModel;
+    using System.Globalization;
     using System.Linq;
     using FullStack.Db.Abstractions;
 
@@ -47,7 +48,7 @@ namespace FullStack.Db.Extensions.Seed
         public static int ToLookupId<TEnum>(this TEnum enumItem)
            where TEnum : struct
         {
-            return (int)Convert.ChangeType(enumItem, typeof(int));
+            return (int)Convert.ChangeType(enumItem, typeof(int), CultureInfo.CurrentCulture);
         }
 
         /// <summary>

@@ -32,6 +32,46 @@ namespace FullStack.Svc.Abstractions
         }
 
         /// <summary>
+        /// Initialises a new instance of the
+        /// <see cref="InvalidItemsException"/> class.
+        /// </summary>
+        /// <param name="operationData">Operation data.</param>
+        /// <param name="message">A message.</param>
+        /// <param name="inner">An inner exception.</param>
+        public InvalidItemsException(
+            OperationData operationData,
+            string message = null,
+            Exception inner = null)
+                : base(operationData, message, inner)
+        { }
+
+        /// <summary>
+        /// Initialises a new instance of the
+        /// <see cref="InvalidItemsException"/> class.
+        /// </summary>
+        public InvalidItemsException()
+        { }
+
+        /// <summary>
+        /// Initialises a new instance of the
+        /// <see cref="InvalidItemsException"/> class.
+        /// </summary>
+        /// <param name="message">A message.</param>
+        public InvalidItemsException(string message)
+            : base(message)
+        { }
+
+        /// <summary>
+        /// Initialises a new instance of the
+        /// <see cref="InvalidItemsException"/> class.
+        /// </summary>
+        /// <param name="message">A message.</param>
+        /// <param name="innerException">Inner exception.</param>
+        public InvalidItemsException(string message, Exception innerException)
+            : base(message, innerException)
+        { }
+
+        /// <summary>
         /// Gets the errors.
         /// </summary>
         public IList<InvalidItem> Errors { get; }

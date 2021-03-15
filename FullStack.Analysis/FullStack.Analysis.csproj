@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>FullStack.Analysis</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>Paul Jones</Authors>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <Company>Paul Jones</Company>
+    <Description>Analyzers and devliery of global config</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="FullStack.Analysis.props" Pack="true" PackagePath="build" />
+    <None Include=".analyzerconfig" Pack="true" PackagePath="content" />
+    <None Include="stylecop.json" Pack="true" PackagePath="content" />
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+  
+</Project>
