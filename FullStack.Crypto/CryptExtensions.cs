@@ -5,6 +5,7 @@
 namespace FullStack.Crypto
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Security.Cryptography;
@@ -27,7 +28,11 @@ namespace FullStack.Crypto
         /// <param name="key">The key.</param>
         /// <param name="bufferLength">Buffer length.</param>
         /// <param name="mac">Optional write stream to capture MAC.</param>
-        public static void Encrypt(this FileInfo fi, byte[] key, int bufferLength = 32768, Stream mac = null)
+        public static void Encrypt(
+            this FileInfo fi,
+            byte[] key,
+            int bufferLength = 32768,
+            Stream mac = null)
         {
             string name;
             var counter = new byte[12];
@@ -67,7 +72,9 @@ namespace FullStack.Crypto
                 source.Write(pepper);
             }
 
-            var target = Path.Combine(fi.DirectoryName, $"{name}{fi.Extension}").ToLower();
+            var target = Path.Combine(
+                fi.DirectoryName,
+                name + fi.Extension).ToLower(CultureInfo.InvariantCulture);
             fi.MoveTo(target, true);
         }
 
@@ -184,7 +191,11 @@ namespace FullStack.Crypto
 
             if (authenticate)
             {
-                aes.Decrypt(counter, srcBuffer.AsSpan(0, readSize), macBuffer, trgBuffer.AsSpan(0, readSize));
+                aes.Decrypt(
+                    counter,
+                    srcBuffer.AsSpan(0, readSize),
+                    macBuffer,
+                    trgBuffer.AsSpan(0, readSize));
             }
             else
             {

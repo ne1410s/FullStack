@@ -31,10 +31,14 @@ namespace FullStack.Validity
         {
             errors = new List<InvalidItem>();
 
-            foreach (var prop in instance?.GetType().GetProperties(PublicInstance) ?? Array.Empty<PropertyInfo>())
+            foreach (var prop in instance?.GetType().GetProperties(PublicInstance)
+                ?? Array.Empty<PropertyInfo>())
             {
                 var value = prop.GetValue(instance);
-                if (prop.PropertyType.IsValueType || prop.PropertyType.IsPrimitive || prop.PropertyType.IsEnum || prop.PropertyType == typeof(string))
+                if (prop.PropertyType.IsValueType
+                    || prop.PropertyType.IsPrimitive
+                    || prop.PropertyType.IsEnum
+                    || prop.PropertyType == typeof(string))
                 {
                     var tempResults = new List<ValidationResult>();
                     var context = new ValidationContext(instance) { MemberName = prop.Name };

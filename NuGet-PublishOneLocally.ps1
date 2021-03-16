@@ -1,4 +1,4 @@
-$project = 'FullStack.Text.Extensions'
+$project = 'FullStack.Analysis'
 $version = '1.0.0'
 
 # purge temporary package (forces a rebuild)

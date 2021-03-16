@@ -17,19 +17,19 @@ namespace FullStack.Db.Extensions.Provider
         /// The package namespace for
         /// <see cref="Microsoft.EntityFrameworkCore.SqlServer"/>.
         /// </summary>
-        public const string EFCORE_SQLSERVER = nameof(Microsoft.EntityFrameworkCore.SqlServer);
+        public const string SqlServerEFCore = nameof(Microsoft.EntityFrameworkCore.SqlServer);
 
         /// <summary>
         /// The package namespace for
         /// <see cref="Microsoft.EntityFrameworkCore.Sqlite"/>.
         /// </summary>
-        public const string EFCORE_SQLITE = nameof(Microsoft.EntityFrameworkCore.Sqlite);
+        public const string SqliteEFCore = nameof(Microsoft.EntityFrameworkCore.Sqlite);
 
         /// <summary>
         /// The package namespace for
         /// <see cref="Pomelo.EntityFrameworkCore.MySql"/>.
         /// </summary>
-        public const string EFCORE_MYSQL = nameof(Pomelo.EntityFrameworkCore.MySql);
+        public const string MySqlEFCore = nameof(Pomelo.EntityFrameworkCore.MySql);
 
         /// <summary>
         /// Gets a supported provider type from package namespace.
@@ -40,9 +40,9 @@ namespace FullStack.Db.Extensions.Provider
         {
             return provider switch
             {
-                EFCORE_SQLSERVER => DatabaseType.SqlServer,
-                EFCORE_SQLITE => DatabaseType.Sqlite,
-                EFCORE_MYSQL => DatabaseType.MySql,
+                SqlServerEFCore => DatabaseType.SqlServer,
+                SqliteEFCore => DatabaseType.Sqlite,
+                MySqlEFCore => DatabaseType.MySql,
                 _ => throw new NotSupportedException(
                     $"Provider not supported: {provider}"),
             };

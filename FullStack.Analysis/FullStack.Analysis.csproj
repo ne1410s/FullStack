@@ -16,9 +16,8 @@
 
   <ItemGroup>
     <None Include="FullStack.Analysis.props" Pack="true" PackagePath="build" />
-    <None Include=".analyzerconfig" Pack="true" PackagePath="content" />
     <None Include="stylecop.json" Pack="true" PackagePath="content" />
-    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <Content Include=".analyzerconfig" Pack="true" PackagePath="content" />
   </ItemGroup>
   
 </Project>
