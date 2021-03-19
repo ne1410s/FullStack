@@ -1,4 +1,4 @@
-$project = 'FullStack.Analysis'
+$project = 'FullStack.Crypto'
 $version = '1.0.0'
 
 # purge temporary package (forces a rebuild)
