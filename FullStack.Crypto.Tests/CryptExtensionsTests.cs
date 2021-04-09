@@ -141,5 +141,22 @@ namespace FullStack.Crypto.Tests
             File.Delete(fileName);
             File.Delete(macFile);
         }
+
+        ////[Fact]
+        ////public void EncryptMany()
+        ////{
+        ////    var di = new DirectoryInfo(@"C:\MADE_UP");
+        ////    var files = di.GetFiles("*", SearchOption.AllDirectories);
+
+        ////    var key = new byte[]
+        ////    {
+        ////        // TODO
+        ////    };
+
+        ////    for (var i = 0; i < files.Length; i++)
+        ////    {
+        ////        files[i].Encrypt(key);
+        ////    }
+        ////}
     }
 }
